@@ -70,18 +70,8 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    int n, k; cin >> n >> k;
-    int ans = n;
-    for(int i=1; i*i <= n; ++i) {
-        if(i > k) break;
-        if(n%i==0) {
-            ans = min(ans, n/i);
-            if(n/i <= k) ans = min(ans, i);
-        }
-    }
-    cout << ans << endl;
-    return;
-}   
+    int n; cin >> n; 
+}
 
 int32_t main()
 {
