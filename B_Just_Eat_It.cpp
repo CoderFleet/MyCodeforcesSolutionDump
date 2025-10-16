@@ -71,32 +71,16 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    set<int> st;
-    for(int i=2; i*i<=n; ++i) {
-        if(n % i == 0) {
-            st.insert(i);
-            n /= i;
-            break;
+    bool flg = false;
+    fr(i, n) {
+        int x; cin >> x;
+        if(x < 0) {
+            flg = true;
         }
     }
 
-    for(int i=2; i*i<=n; ++i) {
-        if(n%i == 0 && st.count(i) == 0) {
-            st.insert(i);
-            n/=i;
-            break;
-        }
-    }
-
-    st.insert(n);
-
-    if(st.size() <= 2) {
-        cout << "NO\n";
-        return;
-    } else cout << "YES\n";
-    for(auto it: st) {
-        cout << it << " ";
-    }
+    if(flg) cout << "NO";
+    else cout << "YES";
     cout << endl;
 }
 
