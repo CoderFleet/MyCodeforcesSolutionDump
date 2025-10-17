@@ -72,27 +72,25 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 void solve(){
     int n; cin >> n;
     vi a(n); cin >> a;
-    bool flg = false;
-    int cr = 0;
-    for(int i=0; i<n-1; ++i) {
-        cr += a[i];
-        if(cr <= 0) {
-            flg = true;
-            break;
-        }
-    }
-    cr = 0;
-    for(int i=n-1; i>0; --i) {
-        cr += a[i];
-        if(cr <= 0) {
-            flg = true;
-            break;
+    vi b(n); cin >> b;
+    
+    unordered_set<int> st;
+    int i = 0, j = 0;
+    int ans = 0;
+    while(j < n && i < n) {
+        if(a[i] == b[j]) {
+            ++i; ++j;
+        } else {
+            if(st.find(a[i]) != st.end()) ++i;
+            else {
+                st.insert(b[j]);
+                ++j;
+                ++ans;
+            }
         }
     }
 
-    if(flg) cout << "NO";
-    else cout << "YES";
-    cout << endl;
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -102,7 +100,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();
