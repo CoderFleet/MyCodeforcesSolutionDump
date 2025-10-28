@@ -65,6 +65,7 @@
         "rope": "cpp",
         "slist": "cpp",
         "ranges": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "compare": "cpp"
     }
 }
