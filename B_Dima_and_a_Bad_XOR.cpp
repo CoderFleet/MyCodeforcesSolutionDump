@@ -71,25 +71,50 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n, m; cin >> n >> m;
-    vi a(n), b(n);
-    a[0] = 1;
-    rep(i,1, n-1) cin >> a[i];
-    cin >> b;
 
-    srt(a); srt(b);
-    int ans = 0;
-    int i = 0, j = 0;
-    while(j<n) {
-        if(a[i] < b[j]) {
-            ++i;
-            ++j;
-        } else {
-            ++ans;
-            ++j;
+    vvi matrix(n, vi(m));
+    fr(i, n) {
+        cin >> matrix[i];
+    }
+    
+    for(int t=0; t<10; ++t) {
+        vvi dp(n+1, vi(2, 0));
+        vvi par(n+1, vi(2, -1));
+
+        dp[0][0] = 1;
+
+        for(int i=0; i<n; ++i) {
+            for(int x=0; x<2; ++x) {
+                if(!dp[i][x]) continue;
+
+                for(int j=0; j<m; ++j) {
+                    int bt = (matrix[i][j] >> t) & 1;
+                    int nx = x ^ bt;
+
+                    dp[i+1][nx] = 1;
+                    par[i+1][nx] = j;
+                }
+            }
         }
+        if(dp[n][1]) {
+            vi ans;
+            int cr = 1;
+
+            for(int i=n; i>0; --i) {
+                ans.pb(par[i][cr] + 1);
+
+                cr ^= (matrix[i-1][par[i][cr]] >> t) & 1;
+            }
+            reverse(all(ans));
+            cout << "TAK\n";
+            cout << ans << endl;
+            return;
+        }
+
     }
 
-    cout << ans << endl; 
+
+    cout << "NIE\n";
 }
 
 int32_t main()
@@ -99,7 +124,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

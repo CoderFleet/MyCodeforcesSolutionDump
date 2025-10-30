@@ -70,26 +70,43 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    int n, m; cin >> n >> m;
-    vi a(n), b(n);
-    a[0] = 1;
-    rep(i,1, n-1) cin >> a[i];
-    cin >> b;
-
-    srt(a); srt(b);
-    int ans = 0;
-    int i = 0, j = 0;
-    while(j<n) {
-        if(a[i] < b[j]) {
-            ++i;
-            ++j;
-        } else {
-            ++ans;
-            ++j;
+    int n; cin >> n;
+    
+    vvi bits(n, vi(32, 0));
+    fr(i, n) {
+        int x; cin >> x;
+        for(int j=0; j<32; ++j) {
+            if(i!=0) bits[i][j] = bits[i-1][j];
+            if(x & (1LL<<j)) bits[i][j]++; 
         }
     }
+    
+    int q; cin >> q;
+    while(q--) {
+        int l, k; cin >> l >> k;
+        l--;
+        int ans = -2;
 
-    cout << ans << endl; 
+        int k1=l, k2=n-1;
+        while(k1<=k2) {
+            int mid = (k1+k2)/2;
+
+            int val = 0;
+            for(int i=0; i<32; ++i) {
+                if(bits[mid][i] - ((l==0) ? 0 : bits[l-1][i]) == mid-l+1) val += (1LL<<i);
+            }
+
+            if(val >= k) {
+                ans = mid;
+                k1 = mid+1;
+            } else k2 = mid-1;
+        }
+
+        cout << ans+1 << " ";
+    }
+    cout << endl;
+
+    return;
 }
 
 int32_t main()
