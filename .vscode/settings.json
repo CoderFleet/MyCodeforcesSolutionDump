@@ -66,6 +66,9 @@
         "slist": "cpp",
         "ranges": "cpp",
         "iomanip": "cpp",
-        "compare": "cpp"
+        "compare": "cpp",
+        "barrier": "cpp",
+        "latch": "cpp",
+        "semaphore": "cpp"
     }
 }
