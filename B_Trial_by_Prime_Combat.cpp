@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -69,12 +69,13 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
-}
+// void solve(){
+//     int x, a, b; cin >> x >> a >> b;
+    
+//     if(x > 8) cout << 0 << endl;
+//     else cout << pref[x][b] - pref[x][a-1] << endl;
+    
+// }
 
 int32_t main()
 {
@@ -82,13 +83,39 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    cin >> T;
+
+    int n = 1000000;
+    static int sv[1000001];
+
+    for(int i=2; i<=n; ++i) {
+        if(sv[i] == 0) {
+            for(int j = i; j<=n; j+=i) {
+                sv[j]++;
+            }
+        }
+    }
+
+    static int pref[9][1000001];
+    for (int x=1; x<=8; ++x) {
+        pref[x][0] = 0;
+        for (int i=1; i<=n; ++i) {
+            pref[x][i] = pref[x][i-1];
+            if (sv[i] == x) {
+                pref[x][i] += i;
+            }
+        }
+    }
+
+    while (T--)
+    {
+        int x, a, b; cin >> x >> a >> b;
+        
+        if(x > 8) cout << 0 << endl;
+        else cout << pref[x][b] - pref[x][a-1] << endl;
+    }
+    return 0;
 }
 
-	
+    

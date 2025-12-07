@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -70,10 +70,55 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
+    int n; cin >> n;
+    vi a(2*n); cin >> a;
+    
+    unordered_map<int, int> mpp;
+    bool ev = false;
+    bool div = false;
+    for(int i=0; i<2*n; ++i) {
+        mpp[a[i]]++;
+        if(!(a[i]&1)) {
+            ev = true;
+            if((a[i]/2)%2 != 0) div = true;
+        }
+    }
+
+    int sz = mpp.size();
+    int i1=0, i2=0, i3=0;
+    int sup = 0;
+    int gm = 0;
+    for(auto it: mpp) {
+        int num = it.first;
+        int cnt = it.second;
+        if(cnt&1) {
+            ++i1;
+            if(cnt >= 3) ++sup;
+            else ++gm;
+        }
+        else if((cnt/2)&1) {
+            ++i2;
+            // if(cnt > 4) ++sup;
+        }
+        else ++i3;
+    }
+
+    if(sz==1) {
+        if((mpp[a[0]] / 2)&1) cout << 2 << endl;
+        else cout << 0 << endl;
+    } else {
+        int ans = 0;
+        ans += i1;
+        ans += 2*(i2 + i3);
+
+        if(i3&1) {
+            if(sup == 0 && gm < 2) ans -= 2;
+        }
+
+        cout << ans << endl;
+    }
+
+
 }
 
 int32_t main()
@@ -82,13 +127,13 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    cin >> T;
+    while (T--)
+    {
+        solve();
+    }
+    return 0;
 }
 
-	
+    

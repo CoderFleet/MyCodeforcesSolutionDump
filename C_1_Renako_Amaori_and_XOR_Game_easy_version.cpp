@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -70,10 +70,37 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
+    int n; cin >> n;
+    vi a(n), b(n); cin >> a >> b;
+    bool mai = false, ajimai = false;
+    for(int i=n-1; i>=0; --i) {
+            if(a[i] != b[i]) {
+                if(i&1) {
+                    mai = true;
+                } else {
+                    ajimai = true;
+                }
+                break;
+            }
+        }
+    if(mai || ajimai) {
+        int s1=0, s2=0;
+        for(int i=0; i<n; ++i) {
+            s1 ^= a[i];
+            s2 ^= b[i];
+        }
+        if(s1 == s2) {
+            cout << "Tie" << endl;
+            return;
+        } 
+    }
+    if(mai) {
+        cout << "Mai" << endl;
+    } else if(ajimai) {
+        cout << "Ajisai" << endl;
+    } else {
+        cout << "Tie" << endl;
+    }
 }
 
 int32_t main()
@@ -82,13 +109,13 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    cin >> T;
+    while (T--)
+    {
+        solve();
+    }
+    return 0;
 }
 
-	
+    

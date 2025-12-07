@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -70,10 +70,67 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
+    int n, k; cin >> n >> k;
+    vi a(n); cin >> a;
+    // vi in(n, 1);
+    srt(a);
+    // unordered_set<int> st;
+    // unordered_set<int> ans;
+    a.erase(unique(all(a)), a.end());
+    vb in(a.size(), 0);
+    vector<int> ans;
+    n = a.size();
+    for(int i = 0; i < n; i++){
+        if(in[i]) continue;
+
+        int val = a[i];
+        int pos = true;
+
+        for(int j=val*2; j<=k; j+=val){
+            auto it = lower_bound(all(a), j);
+            if(it == a.end() || *it!=j){
+                pos = 0;
+                break;
+            }
+            in[it-a.begin()] = 1;
+        }
+        if(!pos){
+            cout << -1 << endl;
+            return;
+        }
+        ans.pb(val);
+    }
+    // for(int i=0; i<n; ++i) {
+    //     st.insert(a[i]);
+    //     if(in[i]) {
+    //         ans.insert(a[i]);
+    //         for(int j=i+1; j<n; ++j) {
+    //             if(a[j]%a[i] == 0) in[j] = 0;
+    //         }
+    //     }
+    // }
+
+    // for(auto it: ans) {
+    //     int val = it;
+    //     if(k / it > st.size()) {
+    //         cout << -1 << endl;
+    //         return;
+    //     }
+    //     while(val <= k) {
+    //         if(st.find(val) == st.end()) {
+    //             cout << -1 << endl;
+    //             return;
+    //         } else {
+    //             val += it;
+    //         }
+    //     }
+    // }
+
+    cout << ans.size() << endl;
+    for(auto it: ans) {
+        cout << it << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
@@ -82,13 +139,13 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    cin >> T;
+    while (T--)
+    {
+        solve();
+    }
+    return 0;
 }
 
-	
+    

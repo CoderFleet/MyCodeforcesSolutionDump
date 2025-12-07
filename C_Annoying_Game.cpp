@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -70,10 +70,79 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
+    int n, k; cin >> n >> k;
+    
+    vi a(n), b(n); cin >> a >> b;
+    vi pref(n+1, 0);
+    for(int i=0; i<n; ++i) {
+        pref[i+1] = pref[i] + a[i];
+    }
+
+    if(k&1) {
+        int sm = 0;
+        int mx = a[0];
+        int ast = 0, ase = 0, st = 0;
+        for(int i=0; i<n; ++i) {
+            if(sm == 0) st = i;
+            sm += a[i];
+            if(sm > mx) {
+                mx = sm;
+                ast = st, ase= i;
+            }
+            if(sm < 0) sm = 0;
+        }
+
+        // cout << ast << " " << ase << endl;
+        int ind =  0;
+        int tx = -1e16;
+        for(int i=0; i<n; ++i) {
+            if(a[i] + b[i] > tx) {
+                tx = a[i] + b[i];
+                ind = i;
+            }
+        }
+        int pre = 0;
+        vi suff(n, 0);
+        for(int i=n-2; i>=0; --i) {
+            suff[i] = a[i+1] + suff[i+1];
+            if(suff[i] < 0) suff[i] = 0;
+        }
+        for(int i=0; i<n; ++i) {
+            mx = max(pre + a[i] + b[i] + suff[i], mx);
+            if(i < ast) {
+                mx = max(mx, pre + pref[ase+1] - pref[i] + b[i]);
+            } else if(i > ase) {
+                mx =  max(mx, suff[i] + pref[i+1] - pref[ast] + b[i]);
+            } else {
+                mx = max(mx, pref[ase+1] - pref[ast] + b[i]);
+            }
+            pre += a[i];
+            if(pre < 0) pre = 0;
+        }
+        
+        a[ind] += b[ind];
+        
+        sm = 0;
+        for(int i=0; i<n; ++i) {
+            sm += a[i];
+            mx = max(mx, sm);
+            if(sm < 0) sm = 0;
+        }
+        
+        a[ind] -= b[ind];
+        
+
+        cout << mx << endl;
+    } else {
+        int sm = 0;
+        int mx = mxe(a);
+        for(int i=0; i<n; ++i) {
+            sm += a[i];
+            mx = max(mx, sm);
+            if(sm < 0) sm = 0;
+        }
+
+        cout << mx << endl;    }
 }
 
 int32_t main()
@@ -82,13 +151,13 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    cin >> T;
+    while (T--)
+    {
+        solve();
+    }
+    return 0;
 }
 
-	
+    

@@ -70,6 +70,7 @@
         "barrier": "cpp",
         "latch": "cpp",
         "semaphore": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "thread": "cpp"
     }
 }

@@ -1,10 +1,10 @@
 /*
-																							  
-												   dddddddd                                   
-						 888888888                 d::::::d                                   
-					   88:::::::::88               d::::::d                                   
-					 88:::::::::::::88             d::::::d                                   
-					8::::::88888::::::8            d:::::d                                    
+                                                                                              
+                                                   dddddddd                                   
+                         888888888                 d::::::d                                   
+                       88:::::::::88               d::::::d                                   
+                     88:::::::::::::88             d::::::d                                   
+                    8::::::88888::::::8            d:::::d                                    
 rrrrr   rrrrrrrrr   8:::::8     8:::::8    ddddddddd:::::drrrrr   rrrrrrrrr   aaaaaaaaaaaaa   
 r::::rrr:::::::::r  8:::::8     8:::::8  dd::::::::::::::dr::::rrr:::::::::r  a::::::::::::a  
 r:::::::::::::::::r  8:::::88888:::::8  d::::::::::::::::dr:::::::::::::::::r aaaaaaaaa:::::a 
@@ -17,7 +17,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
  r:::::r             88:::::::::::::88  d:::::::::::::::::dr:::::r          a:::::aaaa::::::a 
  r:::::r               88:::::::::88     d:::::::::ddd::::dr:::::r           a::::::::::aa:::a
  rrrrrrr                 888888888        ddddddddd   dddddrrrrrrr            aaaaaaaaaa  aaaa
-																							  
+                                                                                              
 */
 
 
@@ -70,11 +70,68 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-	int n; cin >> n;
-	for(int i=0; i<n; ++i) {
-		cout << n << endl;
-	}
-}
+    int n; cin >> n;
+    vector<vector<int>> brr;
+    int xma=-1e12, xmi=1e12, yma=-1e12, ymi=1e12;
+    fr(i, n) {
+        int x, y, a, b; cin >> x >> y >> a >> b;
+        xma = max(max(x, a), xma);
+        xmi = min(min(x, a), xmi);
+        yma = max(max(y, b), yma);
+        ymi = min(min(y, b), ymi);
+
+        brr.push_back({x, y, a, b});
+    }
+
+    int width = xma - xmi;
+    int height = yma - ymi;
+
+    vvi tmp(width + 1, vi(height + 1, 0));
+
+    for(auto& it: brr) {
+        int x = it[0] - xmi;
+        int y = it[1] - ymi;
+        int a = it[2] - xmi;
+        int b = it[3] - ymi;
+        tmp[x][y] += 1;
+        tmp[a][y] -= 1;
+        tmp[x][b] -= 1;
+        tmp[a][b]+= 1;
+    }
+
+    for (int i =0; i <= width; ++i) {
+        for (int j = 1; j <= height; ++j) {
+            tmp[i][j] += tmp[i][j - 1];
+        }
+    }
+
+    for (int j = 0; j<= height; ++j) {
+        for (int i = 1; i <= width; ++i) {
+            tmp[i][j] += tmp[i - 1][j];
+        }
+    }
+
+
+    // for(int i=0; i<=(xma-xmi); ++i) {
+    //     for(int j=0; j<=(yma-ymi); ++j) {
+    //         if(tmp[i][j] != 1) {
+    //             cout << "false" << endl;
+    //             return;
+    //         }
+    //     }
+    // }
+
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            if (tmp[i][j] != 1) {
+                cout << "false" << endl;
+                return;
+            }
+        }
+    }
+
+    cout << "true" << endl;
+}   
 
 int32_t main()
 {
@@ -82,13 +139,13 @@ int32_t main()
  ios_base::sync_with_stdio(false);
  cin.tie(NULL);
 
-	int T = 1;
-	cin >> T;
-	while (T--)
-	{
-		solve();
-	}
-	return 0;
+    int T = 1;
+    // cin >> T;
+    while (T--)
+    {
+        solve();
+    }
+    return 0;
 }
 
-	
+    
