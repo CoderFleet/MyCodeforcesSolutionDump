@@ -69,10 +69,28 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+bool recurFind(int curr, char prev, string& a, int n, int m, int k) {
+    if(curr = n+1) return true;
+    if(s[curr-1] == 'C') return false;
+    if(s[curr-1] == 'W' && prev == 'W') return false;
+    bool pos = false;
+    if(curr == 0 || s[curr-1] == 'L') {
+        for(int i=1; i<=m; ++i) {
+            pos |= recurFind(curr + i, s, n, m, k);
+        }
+    }
+
+    
+
+    return pos;
+}
+
 void solve(){
-    int n; cin >> n;
+    int n, m, k; cin >> n >> m >> k;
     
-    
+    string a; cin >> a;
+
+    int ans = recurFind(0, a, n, m, k);
 }
 
 int32_t main()

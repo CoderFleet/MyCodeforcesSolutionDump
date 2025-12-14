@@ -71,8 +71,33 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    
-    
+    vi d(n); cin >> d;
+     
+
+    srt(d);
+    int i=0, j=n-1;
+    int ans = d[i] * d[j];
+    while(i <= j) {
+        if(d[i] * d[j] != ans) {
+            cout << -1 << endl;
+            return;
+        }
+        ++i;
+        --j;
+    }
+
+    vi divs;
+    for(int i=2; i*i <= ans; ++i) {
+        if(ans % i == 0) {
+            divs.pb(i);
+            if(i*i != ans) divs.pb(ans / i);
+        }
+    }
+    srt(divs);
+
+    if(divs == d) cout << ans << endl;
+    else cout << -1 <<endl;
+
 }
 
 int32_t main()

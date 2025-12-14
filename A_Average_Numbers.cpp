@@ -71,8 +71,18 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
+    vi a(n); cin >> a;
     
-    
+    double sm = accumulate(all(a), 0.0);
+    vi ans;
+    for(int i=0; i<n; ++i) {
+        double curr = sm - a[i];
+
+        if((a[i] * 1.0) == (curr * 1.0)/(n-1)) ans.pb(i+1);
+    }
+
+    cout << ans.size() << endl;
+    if(ans.size() > 0)cout << ans << endl;
 }
 
 int32_t main()
@@ -82,7 +92,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

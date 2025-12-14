@@ -71,8 +71,20 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
+    vi a(n); cin >> a;
     
-    
+    while(a.size() > 2) {
+        int sz = a.size();
+        vi ne;
+        for(int i=1; i<sz; ++i) {
+            ne.pb(a[i]-a[i-1]);
+        }
+        if(abs(ne.back()) > abs(ne.front())) {
+            reverse(all(ne));
+        } else {
+            
+        }
+    }
 }
 
 int32_t main()

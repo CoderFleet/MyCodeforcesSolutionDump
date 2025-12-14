@@ -69,10 +69,36 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+bool isValid(int mid, vi& a, vi& b) {
+    int n = a.size();
+    int m = b.size();
+    int j = 0; 
+    for (int i = 0; i < n; ++i) {
+        while (j < m && b[j] < a[i] - mid) j++;
+        if (j == m) return false;
+        if (b[j] > a[i] + mid) return false;
+    }
+    return true;
+}
+
 void solve(){
-    int n; cin >> n;
+    int n, m; cin >> n >> m;
     
-    
+    vi a(n), b(m); cin >> a >> b;
+
+    int l=0, r=2000000000 *1LL;
+    int ans = r;
+    while(l < r) {
+        int mid = (l + r) / 2;
+
+        if(isValid(mid, a, b))  {
+            r = mid;
+        } else {
+            l = mid+1;
+        }
+    }
+
+    cout << l << endl;
 }
 
 int32_t main()

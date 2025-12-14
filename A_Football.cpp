@@ -71,8 +71,18 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    
-    
+    unordered_map<string, int> mpp;
+
+    fr(i, n) {
+        string s; cin >> s;
+
+        mpp[s]++;
+    }
+
+
+    for(auto it: mpp) {
+        
+    }
 }
 
 int32_t main()
@@ -82,7 +92,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

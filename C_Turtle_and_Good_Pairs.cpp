@@ -71,8 +71,11 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
+    string s; cin >> s;
     
-    
+    srt(s);
+
+    cout << s << endl;
 }
 
 int32_t main()

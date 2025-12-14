@@ -71,7 +71,13 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
+    vi a(n); cin >> a;
     
+    unordered_map<int, int> mpp;
+    for(int i=0; i<n; ++i) {
+        mpp[a[i]]++;
+    }
+
     
 }
 

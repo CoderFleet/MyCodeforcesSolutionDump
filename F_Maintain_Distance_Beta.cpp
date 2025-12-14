@@ -70,9 +70,50 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    int n; cin >> n;
-    
-    
+    int n, z; cin >> n >> z;
+    vi x(n); cin >> x;
+
+    srt(x);
+    // vi vis(n, 0);
+    // multiset<int> ms(all(x));   
+    // int ans = 0;
+    // // for(int i=0; i<n; ++i) {
+    // //     if(!vis[i]) {
+    // //         int mi = x[i] + z;
+    // //         auto fnd = lower_bound(all(x), mi);
+    // //         if(fnd != x.end()) {
+    // //             vis[i] = 1;
+    // //             vis[fnd - x.begin()] = 1;
+    // //             ++ans;
+    // //         }
+    // //     }
+    // // }
+    // while (!ms.empty()) {
+    //     auto it = ms.begin();
+    //     int val = *it;
+    //     ms.erase(it);
+
+    //     auto jt = ms.lower_bound(val+z);
+    //     if (jt != ms.end()) {
+    //         ms.erase(jt);
+    //         ++ans;
+    //     }
+    // }
+
+    int mid = n/ 2;
+    int i = 0, j = mid;
+    int ans = 0;
+    while (i <mid && j < n) {
+        if (x[j] - x[i] >= z) {
+            ++ans;
+            ++i;
+            ++j;
+        } else {
+            ++j;
+        }
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()

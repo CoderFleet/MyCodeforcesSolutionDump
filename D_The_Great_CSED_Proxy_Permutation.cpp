@@ -70,9 +70,79 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    int n; cin >> n;
+    int n, x; cin >> n >> x;
     
-    
+    // set<int> st;
+    // st.insert(x);
+    // st.insert(1);
+    vi ans(n+1);
+    // ans[0] = x;
+    // ans[n-1] = 1;
+    // bool flg = true;
+    // for(int i=1; i<n-1; ++i) {
+    //     int curr = i+1;
+    //     // if(n % curr == 0 && st.find(n) == st.end()) {
+    //     //     st.insert(n);
+    //     //     ans[i] = n;
+    //     //     continue;
+    //     // } 
+    //     while(st.find(curr) != st.end() && curr <= n) curr += i+1;
+    //     if(curr > n) {
+    //         // cout << -1 << endl;
+    //         // return;
+    //         flg = false;
+    //     }
+    //     st.insert(curr);
+    //     ans[i] = curr;
+    // }
+    // if(!flg) {
+    //     st.clear();
+    //     st.insert(x);
+    //     st.insert(1);
+    //     ans[0] = x;
+    //     ans[n-1] = 1;
+    //     for(int i=1; i<n-1; ++i) {
+    //         int curr = i+1;
+    //         if(n % curr == 0 && st.find(n) == st.end()) {
+    //             st.insert(n);
+    //             ans[i] = n;
+    //             continue;
+    //         } 
+    //         while(st.find(curr) != st.end() && curr <= n) curr += i+1;
+    //         if(curr > n) {
+    //             // cout << -1 << endl;
+    //             // return;
+    //             // flg = false;
+    //         }
+    //         st.insert(curr);
+    //         ans[i] = curr;
+    //     }
+    // }
+
+    for(int i=1; i<=n; ++i) {
+        ans[i] = i;
+    }
+
+    ans[1] = x;
+    ans[n] = 1;
+
+    int st = x;
+    for(int i=st+1; i<n; ++i) {
+        if(i % st == 0) {
+            if(n % i == 0) {
+                ans[st] = i;
+                st = i;
+            }
+        }
+    }
+    ans[st] = n;
+
+    for(int i=1; i<=n; ++i) {
+        cout << ans[i] << " ";
+    }
+    cout << endl;
+    // cout << st << endl;
+    return;
 }
 
 int32_t main()
