@@ -69,40 +69,39 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-void solve(){
-    string s, t; cin >> s >> t;
-    int n = s.length(); int m = t.length();
-    
-    pair<int, int> dp[n+1][m+1]; // dp[i][j] -> denotes length of lcd from 0 to index i of string s and index j of string t;
-    // memset(dp, make_pair(0, -1), sizeof(dp));
-    dp[0][0] = {0, -1};
+double dp[301][301][301];
 
-    rep(i, 1, n) {
-        rep(j, 1, m) {
-            if(s[i-1] == t[j-1]) {
-                dp[i][j] = {1 + dp[i-1][j-1].first, 2};
-            } else {
-                dp[i][j] = {max(dp[i-1][j].first, dp[i][j-1].first), (dp[i-1][j].first > dp[i][j-1].first) ? 0 : 1};
+void solve(){
+    int n; cin >> n;
+    vi cnt(4, 0);
+    vi a(n); 
+    fr(i, n) {
+        cin >> a[i];
+        cnt[a[i]]++;
+    }
+    
+    dp[0][0][0] = 0.;
+
+    rep(three, 0, n) {
+        rep(two, 0, n) {
+            rep(one, 0, n) {
+                int zero = n - three - two - one;
+                if(zero == n) continue;
+                if(one + two + three > n) continue;
+                
+                double val = 1.;
+                if(three > 0) val += ((1.0 * three) / n) * dp[three-1][two+1][one];
+                if(two > 0) val += ((1.0 * two) / n) * dp[three][two-1][one+1];
+                if(one > 0) val += ((1.0 * one) / n) * dp[three][two][one-1];
+
+                val *= (1.0 * n) / (n - zero);
+
+                dp[three][two][one] = val;
             }
         }
     }
 
-    string ans = "";
-    int i = n, j = m;
-    while(i>0 && j>0) {
-        if(dp[i][j].second == 2) {
-            ans += t[j-1];
-            i -= 1;
-            j -= 1;
-        } else {
-            if(dp[i][j].second == 0) i -= 1;
-            else j -= 1;
-        }
-    }
-
-    reverse(all(ans));
-
-    cout << ans << endl;
+    cout << setprecision(16) << dp[cnt[3]][cnt[2]][cnt[1]] << endl;
 }
 
 int32_t main()

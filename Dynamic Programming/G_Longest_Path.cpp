@@ -69,40 +69,27 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+void recurFill(int curr, unordered_map<int, vi>& mpp, vi& dp) {
+    int val = 0;
+    for(auto& it: mpp[curr]) {
+        if(dp[it] == -1) recurFill(it, mpp, dp);
+        val = max(1+dp[it], val);
+    }
+    dp[curr] = val;
+}
+
 void solve(){
-    string s, t; cin >> s >> t;
-    int n = s.length(); int m = t.length();
-    
-    pair<int, int> dp[n+1][m+1]; // dp[i][j] -> denotes length of lcd from 0 to index i of string s and index j of string t;
-    // memset(dp, make_pair(0, -1), sizeof(dp));
-    dp[0][0] = {0, -1};
-
-    rep(i, 1, n) {
-        rep(j, 1, m) {
-            if(s[i-1] == t[j-1]) {
-                dp[i][j] = {1 + dp[i-1][j-1].first, 2};
-            } else {
-                dp[i][j] = {max(dp[i-1][j].first, dp[i][j-1].first), (dp[i-1][j].first > dp[i][j-1].first) ? 0 : 1};
-            }
-        }
+    int n, m; cin >> n >> m;
+    unordered_map<int, vector<int>> mpp;
+    fr(i, m) {
+        int x, y; cin >> x >> y;
+        x -= 1;
+        y -= 1;
+        mpp[x].pb(y);
     }
-
-    string ans = "";
-    int i = n, j = m;
-    while(i>0 && j>0) {
-        if(dp[i][j].second == 2) {
-            ans += t[j-1];
-            i -= 1;
-            j -= 1;
-        } else {
-            if(dp[i][j].second == 0) i -= 1;
-            else j -= 1;
-        }
-    }
-
-    reverse(all(ans));
-
-    cout << ans << endl;
+    vi dp(n, -1);
+    for(int i=0; i<n; ++i) if(dp[i] == -1) recurFill(i, mpp, dp);
+    cout << mxe(dp) << endl;
 }
 
 int32_t main()
