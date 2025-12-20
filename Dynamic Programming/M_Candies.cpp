@@ -69,41 +69,11 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-// int recurCount(int ind, int rem, vvi& dp, vi& a) {
-//     if(ind == a.size()) {
-//         return (rem == 0);
-//     }
-//     if(dp[ind][rem] != -1) return dp[ind][rem];
-//     int ans = 0;
-
-//     for(int i=0; i<=min(a[ind], rem); ++i) {
-//         modadd(ans, recurCount(ind+1, rem-i, dp, a));
-//     }
-
-//     return dp[ind][rem] = ans;
-// }
-
 void solve(){
     int n, k; cin >> n >> k;
     vi a(n); cin >> a;
     
-    vvi dp(n, vi(k+1, 0)); // dp denotes number of ways to get to index i using only j coins;
-    vi pref(k+1, 0);
-    for(int i=0; i<=k; ++i) {
-        if(i<=a[0]) dp[0][i] = 1;
-        pref[i] = ((i!=0 ? pref[i-1] : 0) + dp[0][i]) % MOD;
-    }
-    for(int i=1; i<n; ++i) {
-        for(int j=0; j<=k; ++j) {
-            dp[i][j] = (pref[j] - ((j - a[i] > 0) ? pref[j - a[i] - 1] : 0) + MOD) % MOD;
-        }
-
-        for(int j=0; j<=k; ++j) {
-            pref[j] = ((j>0 ? pref[j-1] : 0) + dp[i][j]) % MOD;
-        }
-    }
-
-    cout << dp[n-1][k] << endl;
+    
 }
 
 int32_t main()
