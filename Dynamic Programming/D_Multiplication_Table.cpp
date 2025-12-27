@@ -69,10 +69,28 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+int fndCnt(int mid, int n, int m) {
+    int cnt = 0;
+    for(int i=1; i<=n; ++i) {
+        int val = mid/i;
+        cnt += min(val, m);   
+    }
+    return cnt;
+}
+
 void solve(){
-    int n; cin >> n;
-    vi a(n); cin >> a;
-     
+    int n, m, k; cin >> n >> m >> k;
+    int l = 1, r = m*n;
+    int ans = m*n;
+    while(l <= r) {
+        int mid = l + (r - l)/2;
+        int cnt = fndCnt(mid, m, n);
+        if(cnt >= k) {
+            ans = mid;
+            r = mid-1;
+        } else l = mid+1;
+    }
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -82,7 +100,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

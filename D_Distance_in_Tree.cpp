@@ -69,10 +69,35 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+int dp[50001][501];
+unordered_map<int, vi> mpp;
+int ans = 0;
+int k;
+
+void dfs(int curr, int par) {
+    dp[curr][0] = 1;
+    for(auto it: mpp[curr]) {
+        if(it == par) continue;
+        dfs(it, curr);
+        for(int d=0; d<k; ++d) {
+            ans += dp[curr][k-d-1] * dp[it][d];
+        }
+        for(int d=1; d<=k; ++d) {
+            dp[curr][d] += dp[it][d-1]; 
+        }
+    }
+}
+
 void solve(){
-    int n; cin >> n;
-    vi a(n); cin >> a;
-     
+    int n; cin >> n >> k;    
+    rep(i, 1, n-1) {
+        int u, v; cin >> u >> v;
+        mpp[u].pb(v);
+        mpp[v].pb(u);
+    }    
+    memset(dp, 0, sizeof(dp));
+    dfs(1, 0);
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -82,7 +107,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();
