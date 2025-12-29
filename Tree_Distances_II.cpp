@@ -68,38 +68,30 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-
-int f(int curr, int par, vvi& g, vvi& dp) {
-    vi children_heights;
+int n;
+int popu(int curr, int par, vvi& g, vi& dp) {
+    int tot = 0;    
+    dp[curr] = 1;
     for(auto& it: g[curr]) {
         if(it == par) continue;
-        children_heights.push_back(f(it, curr, g, dp));
+        tot += popu(it, curr, g, dp) + dp[it];
+        dp[curr] += dp[it];
     }
-    sort(children_heights.begin(), children_heights.end());
-    int sz = children_heights.size();
-    if (sz >= 1) dp[curr][1] = children_heights[sz - 1];
-    if (sz >= 2) dp[curr][0] = children_heights[sz - 2];
-    return 1 + dp[curr][1];
+    return tot;
 }
 
-void popu(int curr, int par, vvi& g, vvi& dp, vi& ans, int up) {
-    ans[curr] = max(up, dp[curr][1]);
+void f(int curr, int par, const vvi& g, vi& dp, vi& ans) {
+    if(par != -1) {
+        ans[curr] = ans[par] - (dp[curr]) + (n - dp[curr]);
+    }
     for(auto& it: g[curr]) {
         if(it == par) continue;
-
-        int bst;
-        if(dp[curr][1] == 1 + dp[it][1]) {
-            bst = max(dp[curr][0], up);
-        } else {
-            bst = max(dp[curr][1], up);
-        }
-
-        popu(it, curr, g, dp, ans, 1 + bst);
+        f(it, curr, g, dp, ans);
     }
 }
 
 void solve(){
-    int n; cin >> n;
+    cin >> n;
     int e=n-1;
     vector<vector<int>> g(n);
     for(int i=1;i<=e;i++){
@@ -110,11 +102,13 @@ void solve(){
       g[v].push_back(u);
     }
     vi ans(n);
-    vvi dp(n, vi(2, 0));
-    f(0, -1, g, dp);
-    // cout << dp << endl;
 
-    popu(0, -1, g, dp, ans, 0);
+    vi dp(n);
+    ans[0] = popu(0, -1, g, dp);
+    // cout << dp << endl;
+    // cout << ans[0] << endl;
+
+    f(0, -1, g, dp, ans);
 
     cout << ans << endl;
 }

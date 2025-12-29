@@ -69,54 +69,28 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-int f(int curr, int par, vvi& g, vvi& dp) {
-    vi children_heights;
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-        children_heights.push_back(f(it, curr, g, dp));
-    }
-    sort(children_heights.begin(), children_heights.end());
-    int sz = children_heights.size();
-    if (sz >= 1) dp[curr][1] = children_heights[sz - 1];
-    if (sz >= 2) dp[curr][0] = children_heights[sz - 2];
-    return 1 + dp[curr][1];
-}
-
-void popu(int curr, int par, vvi& g, vvi& dp, vi& ans, int up) {
-    ans[curr] = max(up, dp[curr][1]);
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-
-        int bst;
-        if(dp[curr][1] == 1 + dp[it][1]) {
-            bst = max(dp[curr][0], up);
-        } else {
-            bst = max(dp[curr][1], up);
-        }
-
-        popu(it, curr, g, dp, ans, 1 + bst);
-    }
-}
-
 void solve(){
-    int n; cin >> n;
-    int e=n-1;
-    vector<vector<int>> g(n);
-    for(int i=1;i<=e;i++){
-      int u,v; cin>>u>>v;
-      v -= 1;
-      u -= 1;
-      g[u].push_back(v);
-      g[v].push_back(u);
+    int n, k; cin >> n >> k;
+    vi a(n); cin >> a;
+
+    vi els;
+    map<int, int> mpp;
+    // set<int> st;
+    for(int i=0; i<k; ++i) {
+        mpp[a[i]]++;
+        // st.insert(a[i]);
     }
-    vi ans(n);
-    vvi dp(n, vi(2, 0));
-    f(0, -1, g, dp);
-    // cout << dp << endl;
+    els.pb(mpp.begin()->first);
+    for(int j=k; j<n; ++j) {
+        mpp[a[j-k]]--;
+        if(mpp[a[j-k]] == 0) {
+            mpp.erase(a[j-k]);
+        }
+        mpp[a[j]]++;
+        els.pb(mpp.begin()->first);
+    }
 
-    popu(0, -1, g, dp, ans, 0);
-
-    cout << ans << endl;
+    cout << mxe(els) << endl;
 }
 
 int32_t main()

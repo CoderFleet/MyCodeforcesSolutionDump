@@ -69,54 +69,25 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-int f(int curr, int par, vvi& g, vvi& dp) {
-    vi children_heights;
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-        children_heights.push_back(f(it, curr, g, dp));
+int recurFind(int curr, int pw, vi& a, vvi& dp) {
+    int n =a.size();
+    if(curr == n) return 0;
+    if(dp[curr][pw] != -1) return dp[curr][pw];
+    int ans;
+    if(pw) {
+        ans = recurFind(curr+1, 0, a, dp);
+        ans = min(ans, recurFind(curr+1, 1, a, dp) + a[curr]);
+    } else {
+        ans = recurFind(curr+1, 1, a, dp) + a[curr];
     }
-    sort(children_heights.begin(), children_heights.end());
-    int sz = children_heights.size();
-    if (sz >= 1) dp[curr][1] = children_heights[sz - 1];
-    if (sz >= 2) dp[curr][0] = children_heights[sz - 2];
-    return 1 + dp[curr][1];
-}
-
-void popu(int curr, int par, vvi& g, vvi& dp, vi& ans, int up) {
-    ans[curr] = max(up, dp[curr][1]);
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-
-        int bst;
-        if(dp[curr][1] == 1 + dp[it][1]) {
-            bst = max(dp[curr][0], up);
-        } else {
-            bst = max(dp[curr][1], up);
-        }
-
-        popu(it, curr, g, dp, ans, 1 + bst);
-    }
+    return dp[curr][pw] = ans;
 }
 
 void solve(){
     int n; cin >> n;
-    int e=n-1;
-    vector<vector<int>> g(n);
-    for(int i=1;i<=e;i++){
-      int u,v; cin>>u>>v;
-      v -= 1;
-      u -= 1;
-      g[u].push_back(v);
-      g[v].push_back(u);
-    }
-    vi ans(n);
-    vvi dp(n, vi(2, 0));
-    f(0, -1, g, dp);
-    // cout << dp << endl;
-
-    popu(0, -1, g, dp, ans, 0);
-
-    cout << ans << endl;
+    vi a(n); cin >> a;
+    vvi dp(n, vi(2, -1));
+    cout << recurFind(0, 0,a, dp) << endl;
 }
 
 int32_t main()

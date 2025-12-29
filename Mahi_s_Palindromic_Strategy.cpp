@@ -69,54 +69,47 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-int f(int curr, int par, vvi& g, vvi& dp) {
-    vi children_heights;
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-        children_heights.push_back(f(it, curr, g, dp));
-    }
-    sort(children_heights.begin(), children_heights.end());
-    int sz = children_heights.size();
-    if (sz >= 1) dp[curr][1] = children_heights[sz - 1];
-    if (sz >= 2) dp[curr][0] = children_heights[sz - 2];
-    return 1 + dp[curr][1];
-}
-
-void popu(int curr, int par, vvi& g, vvi& dp, vi& ans, int up) {
-    ans[curr] = max(up, dp[curr][1]);
-    for(auto& it: g[curr]) {
-        if(it == par) continue;
-
-        int bst;
-        if(dp[curr][1] == 1 + dp[it][1]) {
-            bst = max(dp[curr][0], up);
-        } else {
-            bst = max(dp[curr][1], up);
-        }
-
-        popu(it, curr, g, dp, ans, 1 + bst);
-    }
-}
-
 void solve(){
     int n; cin >> n;
-    int e=n-1;
-    vector<vector<int>> g(n);
-    for(int i=1;i<=e;i++){
-      int u,v; cin>>u>>v;
-      v -= 1;
-      u -= 1;
-      g[u].push_back(v);
-      g[v].push_back(u);
+    vector<string> a(n);
+    fr(i, n) cin >> a[i];
+    // vvi store(n, vi(26, 0));
+    unordered_map<int, int> cnt;
+    // vvi nat(26, )
+    for(int i=0; i<n; ++i) {
+        int mask = 0;
+        for(auto c: a[i]) {
+            mask ^= (1 << (c-'a'));
+        }
+        cnt[mask]++;
     }
-    vi ans(n);
-    vvi dp(n, vi(2, 0));
-    f(0, -1, g, dp);
-    // cout << dp << endl;
+    int ans = 0;
+    int sec = 0;
+    // for(int i=0; i<n; ++i) {
+    //     for(int j=i+1; j<n; ++j) {
+    //         int odd = 0;
+    //         for(int k=0; k<26; ++k) {
+    //             if((store[i][k] + store[j][k] ) & 1) ++odd;
+    //         }
+    //         if(odd <= 1) ++ans;
+    //     }
+    // }
 
-    popu(0, -1, g, dp, ans, 0);
+    for(auto& it: cnt) {
+        int msk = it.first;
+        int repe = it.second;
 
-    cout << ans << endl;
+        ans += (repe * (repe - 1))/2;
+
+        fr(i, 26) {
+            int nmsk = msk ^ (1 << i);
+
+            if(cnt.find(nmsk) != cnt.end()) {
+                sec += repe * cnt[nmsk];
+            }
+        }
+    } 
+    cout << ans + sec/2 << endl;
 }
 
 int32_t main()
