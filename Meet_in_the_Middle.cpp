@@ -68,87 +68,40 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int n, q; 
-class ds {
-    public: 
-        int len;
-        vector<pair<int, int>> t;
-
-        ds(){}
-        ds(int l) {
-            len = l;
-            t.resize(l * 4);
-        }
-
-        void build(vi& a, int v, int tl, int tr) {
-            if(tl == tr) {t[v] = {a[tl], 0}; return;}
-
-            int tm = (tl+tr)/2;
-            build(a, 2*v, tl, tm);
-            build(a, 2*v+1, tm+1, tr);
-            if(t[2*v].first >= t[2*v+1].first) {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 0};
-            } else {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 1};
-            }
-        }
-
-        int query(int v, int tl, int tr, int l, int r, int depth) {
-            if(l>tr || r<tl) return 0;
-            if(tl>=l&&tr<=r) return 1;
-            
-            int tm = (tl+tr)/2;
-            int lft = query(2*v, tl, tm, l, r, depth+1);
-            int rgt = query(2*v+1, tm+1, tr, l, r, depth+1);
-            int val = 0;
-            if((lft && t[v].second) || (rgt && !t[v].second)) val = 1 << (n - depth);
-            return (lft + rgt) + val;
-        }
-
-        void update(int v, int tl, int tr, int id, int val) {
-            if(tl==id && tr == id) {
-                t[v].first = val;
-                return;
-            }
-            if(id<tl || id>tr) return;
-            int tm = (tl + tr)/2;
-            update(2*v, tl, tm, id, val);
-            update(2*v+1, tm+1, tr, id, val);
-            if(t[2*v].first >= t[2*v+1].first) {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 0};
-            } else {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 1};
-            }
-        }
-
-        void build(vi& a) {
-            return build(a, 1, 0, len-1);
-        }
-
-        int query(int l, int r) {
-            return query(1, 0, len-1, l, r, 1);
-        }
-
-        void update(int id, int val) {
-            update(1, 0, len-1, id, val);
-        }
-};
 
 void solve(){
-    cin >> n >> q;
-    int len = pow(2, n);
-    vi a(len); cin >> a;
+    int n, x; cin >> n >> x;
+    vi a(n); cin >> a;
 
-    ds seg(len);
-    seg.build(a);
-    while(q--) {
-        int b, c; cin >> b >> c;
-        b--;
-        int prev = a[b];
-        seg.update(b, c);
-        cout << seg.query(b, b)-1 << endl;
-        seg.update(b, prev);
+    vector<int> left, right;
+    n /= 2;
+    for(int i=0; i<(1<<n); ++i) {
+        int lft=0, rgt=0;
+        for(int j=0; j<n; ++j) {
+            if(i&(1<<j)) {
+                lft += a[j];
+                rgt += a[j+n];
+            }
+        }
+        left.pb(lft);
+        right.pb(rgt);
     }
+    if(a.size()&1) {
+        vi temp;
+        for(auto& num: right) {
+            temp.pb(num + (*a.rbegin()));
+        }
+
+        for(auto it: temp) right.pb(it);
+    }
+    int ans = 0;
+    srt(right);
+    for(auto& num: left) {
+        int len = upper_bound(all(right), x-num) - lower_bound(all(right), x-num);
+        ans += len;
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -158,7 +111,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

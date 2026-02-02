@@ -47,6 +47,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
 using namespace std;
 using namespace __gnu_pbds;
 int MOD=1e9+7;      // Hardcoded, directly change from here for functions!
+int inf = 1e17;
 
 
 
@@ -68,87 +69,46 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int n, q; 
-class ds {
-    public: 
-        int len;
-        vector<pair<int, int>> t;
+vi pref;
+void compute(int l, int r, int optl, int optr, vi&dp, vi& ndp) {
+    if(l>r) return;
+    int mid = (l+r)>>1;
 
-        ds(){}
-        ds(int l) {
-            len = l;
-            t.resize(l * 4);
-        }
+    pair<int, int> bst = {inf, -1};
 
-        void build(vi& a, int v, int tl, int tr) {
-            if(tl == tr) {t[v] = {a[tl], 0}; return;}
+    for(int i=optl; i<=min(optr, mid); ++i) {
+        bst = min(bst, {(i ? dp[i-1] : 0) + (pref[mid+1] - pref[i]) * (pref[mid+1] - pref[i]), i});
+    }
 
-            int tm = (tl+tr)/2;
-            build(a, 2*v, tl, tm);
-            build(a, 2*v+1, tm+1, tr);
-            if(t[2*v].first >= t[2*v+1].first) {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 0};
-            } else {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 1};
-            }
-        }
+    ndp[mid] = bst.first;
+    int opti = bst.second;
 
-        int query(int v, int tl, int tr, int l, int r, int depth) {
-            if(l>tr || r<tl) return 0;
-            if(tl>=l&&tr<=r) return 1;
-            
-            int tm = (tl+tr)/2;
-            int lft = query(2*v, tl, tm, l, r, depth+1);
-            int rgt = query(2*v+1, tm+1, tr, l, r, depth+1);
-            int val = 0;
-            if((lft && t[v].second) || (rgt && !t[v].second)) val = 1 << (n - depth);
-            return (lft + rgt) + val;
-        }
-
-        void update(int v, int tl, int tr, int id, int val) {
-            if(tl==id && tr == id) {
-                t[v].first = val;
-                return;
-            }
-            if(id<tl || id>tr) return;
-            int tm = (tl + tr)/2;
-            update(2*v, tl, tm, id, val);
-            update(2*v+1, tm+1, tr, id, val);
-            if(t[2*v].first >= t[2*v+1].first) {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 0};
-            } else {
-                t[v] = {t[2*v].first ^ t[2*v+1].first, 1};
-            }
-        }
-
-        void build(vi& a) {
-            return build(a, 1, 0, len-1);
-        }
-
-        int query(int l, int r) {
-            return query(1, 0, len-1, l, r, 1);
-        }
-
-        void update(int id, int val) {
-            update(1, 0, len-1, id, val);
-        }
-};
+    compute(l, mid-1, optl, opti, dp, ndp);
+    compute(mid+1, r, opti, optr, dp, ndp);
+}
 
 void solve(){
-    cin >> n >> q;
-    int len = pow(2, n);
-    vi a(len); cin >> a;
+    int n, k; cin >> n >> k;
+    vi x(n); cin >> x;
 
-    ds seg(len);
-    seg.build(a);
-    while(q--) {
-        int b, c; cin >> b >> c;
-        b--;
-        int prev = a[b];
-        seg.update(b, c);
-        cout << seg.query(b, b)-1 << endl;
-        seg.update(b, prev);
+    pref.assign(n+1, 0);
+    for(int i=0; i<n; ++i) {
+        pref[i+1] = pref[i] + x[i];
     }
+
+    vi dp(n, 0);
+    vi ndp(n, 0);
+
+    for(int i=0; i<n; ++i) {
+        dp[i] = pref[i+1] * pref[i+1];
+    }
+
+    for(int i=1; i<k; ++i) {
+        compute(0, n-1, 0, n-1, dp, ndp);
+        dp = ndp;
+    }
+
+    cout << dp[n-1] << endl;
 }
 
 int32_t main()
@@ -158,7 +118,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();
