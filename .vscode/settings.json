@@ -72,5 +72,7 @@
         "semaphore": "cpp",
         "tuple": "cpp",
         "thread": "cpp"
-    }
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python-envs.pythonProjects": []
 }
