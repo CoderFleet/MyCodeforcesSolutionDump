@@ -1,43 +1,20 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include <pthread.h>
+#include<iostream>
+using namespace std;
 
-typedef struct {
-    int *numbers;
-    int n;
-    double result;
-} ThreadData;
-
-void* compute_average(void* arg) {
-    ThreadData *data = (ThreadData*)arg;
-
-    int sum = 0;
-    for(int i = 0; i < data->n; i++)
-        sum += data->numbers[i];
-
-    data->result = (double)sum / data->n;
-
-    return NULL;
-}
-
-
-int main(int argc, char *argv[]) {
-
-    int n = argc - 1;
-    int numbers[n];
-
-    for(int i = 0; i < n; i++)
-        numbers[i] = atoi(argv[i+1]);
-
-    ThreadData data;
-    data.numbers = numbers;
-    data.n = n;
-
-    pthread_t tid;
-    pthread_create(&tid, NULL, compute_average, &data);
-    pthread_join(tid, NULL);
-
-    printf("Average = %.2f\n", data.result);
-
+int main() {
+    pid_t pid1 = fork();
+    if (pid1 < 0) perror("First fork failed");
+    
+    if (pid1 && (!fork())) {
+        if ((!fork()) || fork()) {
+            fork();
+            fork();
+        }
+    }
+    // Added \n to force the buffer to flush
+    cout << "Hi!" << endl;
     return 0;
 }
