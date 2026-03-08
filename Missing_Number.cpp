@@ -71,35 +71,14 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vi a(n); cin >> a;
-
-    const int lim = 20;
-    const int len = (1<<lim);
-
-    vi f(len+1, 0);
-    for(auto& x: a) f[x]++;
-
-    vi sub = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if(msk & (1<<i)) {
-                sub[msk] += sub[msk ^ (1<<i)];
-            }
-        }
+    vi a(n-1); cin >> a;
+    int nor = 0, tar = n;
+    for(int i=0; i<n-1; ++i) {
+        nor ^= a[i];
+        tar ^= i+1;
     }
-
-    vi sup = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if((msk & (1<<i)) == 0) {
-                sup[msk] += sup[msk | (1<<i)];
-            }
-        }
-    }
-
-    for(int i=0; i<n; ++i) {
-        cout << sub[a[i]] << " " << sup[a[i]] << " " << n - sub[(len-1) ^ a[i]]; nl;
-    }
+    cout << (nor^tar) << endl;
+    return ;
 }
 
 int32_t main()

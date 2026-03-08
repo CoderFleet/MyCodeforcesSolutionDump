@@ -71,35 +71,25 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vi a(n); cin >> a;
+    vvi a(n, vi(n));
+    fr(i, n) {
+        cin >> a[i];
+    }
 
-    const int lim = 20;
-    const int len = (1<<lim);
-
-    vi f(len+1, 0);
-    for(auto& x: a) f[x]++;
-
-    vi sub = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if(msk & (1<<i)) {
-                sub[msk] += sub[msk ^ (1<<i)];
+    vi dp(1<<n, 0);
+    dp[0] = 1;
+    for(int i=0; i<(1<<n); ++i) {
+        int nxt = __builtin_popcountll(i);
+        for(int j=0; j<n; ++j) {
+            if(i&(1<<j)) continue;
+            if(a[nxt][j]) {
+                dp[i|(1<<j)] = (dp[i|(1<<j)] + dp[i]) % MOD;
             }
         }
     }
 
-    vi sup = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if((msk & (1<<i)) == 0) {
-                sup[msk] += sup[msk | (1<<i)];
-            }
-        }
-    }
-
-    for(int i=0; i<n; ++i) {
-        cout << sub[a[i]] << " " << sup[a[i]] << " " << n - sub[(len-1) ^ a[i]]; nl;
-    }
+    cout << dp[(1<<n)-1] << endl;
+    return ;
 }
 
 int32_t main()

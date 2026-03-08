@@ -47,7 +47,7 @@ rr::::::rrrrr::::::r  8:::::::::::::8  d:::::::ddddd:::::drr::::::rrrrr::::::r  
 using namespace std;
 using namespace __gnu_pbds;
 int MOD=1e9+7;      // Hardcoded, directly change from here for functions!
-
+int inf = 1e16;
 
 
 void modadd(int &a , int b) {a=((a%MOD)+(b%MOD))%MOD;}
@@ -72,34 +72,24 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 void solve(){
     int n; cin >> n;
     vi a(n); cin >> a;
-
-    const int lim = 20;
-    const int len = (1<<lim);
-
-    vi f(len+1, 0);
-    for(auto& x: a) f[x]++;
-
-    vi sub = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if(msk & (1<<i)) {
-                sub[msk] += sub[msk ^ (1<<i)];
+    // cout << a << endl;
+    vvi dp(n, vi(n, inf));
+    vi pref(n+1, 0);
+    fr(i,n) {
+        pref[i+1] = pref[i] + a[i];
+        dp[i][i] = 0;
+    }
+    // cout << dp << endl;
+    // cout << pref << endl;
+    for(int l=2; l<=n; ++l) {
+        for(int i=0; i<n-l+1; ++i) {
+            for(int j=0; j<l-1; ++j) {
+                dp[i][i+l-1] = min(dp[i][i+l-1], dp[i][i+j] + dp[i+j+1][i+l-1] + (pref[i+l]-pref[i]));
             }
         }
     }
 
-    vi sup = f;
-    for(int i=0; i<lim; ++i) {
-        for(int msk=0; msk<len; ++msk) {
-            if((msk & (1<<i)) == 0) {
-                sup[msk] += sup[msk | (1<<i)];
-            }
-        }
-    }
-
-    for(int i=0; i<n; ++i) {
-        cout << sub[a[i]] << " " << sup[a[i]] << " " << n - sub[(len-1) ^ a[i]]; nl;
-    }
+    cout << dp[0][n-1] << endl;
 }
 
 int32_t main()
