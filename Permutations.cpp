@@ -70,19 +70,23 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    string s; cin >> s;
-    int n = s.length();
-    int ans = 1;
-    int cr = 1;
-    for(int i=1; i<n; ++i) {
-        if(s[i] == s[i-1]) {
-            ++cr;
-        } else {
-            cr = 1;
+    int n; cin >> n;    
+    if(n == 1) {
+        cout << 1 << endl;
+        return;
+    } else if(n <= 3) {
+        cout << "NO SOLUTION" << endl;
+    } else if(n == 4) {
+        cout << "2 4 1 3" << endl;
+    } else {
+        for(int i=1; i<=n; i+=2) {
+            cout << i << " ";
         }
-        ans = max(ans, cr);
+        for(int i=2; i<=n; i+=2) {
+            cout << i << " ";
+        }
+        cout << endl;
     }
-    cout << ans << endl;
 }
 
 int32_t main()
