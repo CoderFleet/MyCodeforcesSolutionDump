@@ -71,20 +71,50 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
+    vi a(n); cin >> a;
+    unordered_map<int, int> mpp;
+    for(int i=0; i<n; ++i) {
+        mpp[a[i]]++;
     }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
+    if(mpp.size() != 3) {
+        // if(mpp.size() == 1) {
+            
+        // }
+        cout << "NO" << endl;
         return;
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    multiset<int> st;
+    for(auto it: mpp) {
+        st.insert(it.second);
+    }
+
+    int tot = n / 3;
+    int ex = n % 3;
+    if(ex==0){if(st.count(tot) != 3) {
+        cout << "NO" << endl;
+        return;
+    }
 }
+    else if(ex == 1) {
+        if(st.count(tot + 1) != 1 || st.count(tot) != 2) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    else if(ex == 2) {
+        if(st.count(tot + 1) != 2 || st.count(tot) != 1) {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    int num = 0;
+    for(auto it: mpp) {
+        num ^= it.first;
+    }
+
+    if(num == 0)    cout << "YES" << endl;
+    else cout << "NO" << endl;
+ }
 
 int32_t main()
 {

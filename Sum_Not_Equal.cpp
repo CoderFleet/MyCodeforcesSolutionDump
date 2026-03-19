@@ -71,7 +71,7 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
+    vector<pair<int, int>> a(n);
     fr(i, n) {
         int x; cin >> x;
         a[i] = {x, i};
@@ -100,5 +100,3 @@ int32_t main()
     }
     return 0;
 }
-
-    

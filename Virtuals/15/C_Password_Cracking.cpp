@@ -68,22 +68,57 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-
+bool ask(string s) {
+    cout << "? " << s << endl;
+    int out;
+    cin >> out;
+    return out;
+}
+void submit(string s) {
+    cout << "! " << s << endl;
+    return;
+}
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
+    // 2*n queries limit hai
+
+    string s = "0";
+    if(!ask(s)) {
+        string ans = "";
+        for(int i=0; i<n; ++i) {
+            ans += '1';
+        }
+        submit(ans);
     }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
-        return;
+    s = "1";
+    if(!ask(s)) {
+        string ans = "";
+        for(int i=0; i<n; ++i) {
+            ans += '0';
+        }
+        submit(ans);
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+
+    s = "1";
+    for(int i=1; i<n; ++i) {
+        if(ask(s+'1')) {
+            s += '1';
+        } else if(ask(s+'0')) {
+            s += '0';
+        } else {
+            break;
+        }
+    }
+
+    for(int i=s.length(); i<n; ++i) {
+        if(ask('1' + s)) {
+            s = '1' + s;
+        } else if(ask('0' + s)) {
+            s = '0' + s;
+        } else {
+            break;
+        }
+    }
 }
 
 int32_t main()

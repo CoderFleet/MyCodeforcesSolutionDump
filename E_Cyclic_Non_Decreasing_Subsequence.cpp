@@ -71,19 +71,76 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
+    vi a(n); cin >> a;
+    // for(int i=0; i<n-1; ++i) a.pb(a[i]);
+
+    // vector<int> dp = {a[0]};
+
+    // for(int i=1; i<2*n-1; ++i) {
+    //     if(a[i] >= dp.back()) {
+    //         dp.pb(a[i]);
+    //     } else {
+    //         int idx = lower_bound(dp.begin(), dp.end(), a[i]) - dp.begin();
+    //         dp[idx] = a[i];
+    //     }
+    // }
+
+
+
+    // cout << dp.size() << endl;;
+
+    vector<int> zc(n+1, 0);
+    for(int i=0; i<n; ++i) {
+        zc[i+1] = zc[i] + (a[i] == 0);
     }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
-        return;
+    vi oc(n+1, 0);
+    for(int i=n-1; i<n; ++i) {
+        oc[i] = oc[i+1] + (a[i] == 1);
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    vi preo(n+1, 0);
+    int flg = 1;
+    for(int i=0; i<n; ++i) {
+        if(!flg || a[i] == 0) {
+            flg = 0;
+            preo[i+1] = preo[i];
+        }
+        else preo[i+1] = preo[i] + 1;
+    }
+    int ans = max(zc[n], oc[0]);
+    for(int i=0; i<n; ++i) {
+        if(a[i] == 1) {
+            ans = max(zc[i]+oc[i]+preo[i], ans);
+        }
+    }
+
+    // cout << ans << endl;
+    for(int i=0; i<n; ++i) {
+        a[i] ^= 1;
+    }
+    vector<int> zc1(n+1, 0);
+    for(int i=0; i<n; ++i) {
+        zc1[i+1] = zc1[i] + (a[i] == 0);
+    }
+    vi oc1(n+1, 0);
+    for(int i=n-1; i<n; ++i) {
+        oc1[i] = oc1[i+1] + (a[i] == 1);
+    }
+    vi preo1(n+1, 0);
+     flg = 1;
+    for(int i=0; i<n; ++i) {
+        if(!flg || a[i] == 0) {
+            flg = 0;
+            preo1[i+1] = preo1[i];
+        }
+        else preo1[i+1] = preo1[i] + 1;
+    }
+    // int ans = max(zc1[n], oc1[0]);
+    for(int i=0; i<n; ++i) {
+        if(a[i] == 1) {
+            ans = max(zc1[i]+oc1[i]+preo1[i], ans);
+        }
+    }
+    cout << ans << endl;
 }
 
 int32_t main()

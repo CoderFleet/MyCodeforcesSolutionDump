@@ -68,22 +68,29 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-
-void solve(){
-    int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
+vector<pair<int, int>> ans;
+void f(int n, int from, int to, int via) {
+    if(n == 1) {
+        ans.push_back({from, to});
+        return;
+    } else if(n == 2) {
+        ans.push_back({from, via});
+        ans.push_back({from, to});
+        ans.push_back({via, to});
         return;
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    f(n-1, from, via, to);
+    ans.push_back({from, to});
+    f(n-1, via, to, from);
+    return;
+}
+void solve(){
+    int n; cin >> n;
+    f(n, 1, 3, 2);
+    cout << ans.size() << endl;
+    for(auto& [frm, to]: ans) {
+        cout << frm << " " << to << endl;
+    }
 }
 
 int32_t main()
@@ -93,7 +100,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

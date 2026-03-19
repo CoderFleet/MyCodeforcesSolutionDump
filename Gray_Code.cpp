@@ -69,34 +69,36 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-void solve(){
-    int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
+vector<string> solve(int n){
+    if(n == 1) {
+        return {"0", "1"};
     }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
-        return;
+    vector<string> a = solve(n-1);
+    vector<string> b = a;
+    for(auto& s: a) {
+        s += '0';
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    reverse(b.begin(), b.end());
+    for(auto& s: b) {
+        s += '1';
+    }
+    a.insert(a.end(), b.begin(), b.end());
+    return a;
 }
 
 int32_t main()
 {
- 
- ios_base::sync_with_stdio(false);
- cin.tie(NULL);
-
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
-        solve();
+        int n; cin >> n;
+        vector<string> ans = solve(n);
+        for(auto it: ans) {
+            cout << it << endl;
+        }
     }
     return 0;
 }

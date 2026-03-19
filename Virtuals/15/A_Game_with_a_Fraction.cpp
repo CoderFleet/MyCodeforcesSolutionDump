@@ -70,20 +70,29 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Always count on sieve....
 
 void solve(){
-    int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
+    int p, q; cin >> p >> q;
+
+    if(p%2==0 && (p/2)*3==q) {
+        cout << "Bob" << endl;
         return;
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+
+    int l = 1, r = min(p, q-1);
+    while(l<=r) {
+        int mid = (l+r)>>1;
+        int np = p-mid;
+        int nq = q - mid;
+        if(3 * np == 2 * nq) {
+            cout << "Bob" << endl;
+            return;
+        } else if(3*np < 2 * nq) {
+            r = mid-1;
+        } else {
+            l = mid+1;
+        }
+
+    }
+    cout << "Alice" << endl;
 }
 
 int32_t main()

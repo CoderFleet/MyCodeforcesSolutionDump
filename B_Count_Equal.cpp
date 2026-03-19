@@ -69,21 +69,49 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
-void solve(){
-    int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
+#define maxn 1000000+3
+int fac[maxn];
+int inv[maxn];
+
+int C(int n, int r){
+    int v = (fac[n] * inv[r])%MOD;
+    v = (v * inv[n-r])%MOD;
+    return v;
+}
+
+int modpow(int a, int b){
+    a %= MOD;
+    int res = 1;
+    while (b > 0) {
+        if (b & 1) res = res * a % MOD;
+        a=a*a%MOD;
+        b>>=1;
     }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
+    return res;
+}
+
+void solve(){
+    int x; cin >> x;
+    if(x == 0) {
+        cout << 0 << endl;
         return;
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    if(x <= 2) {
+        cout << 1 << endl;
+        return;
+    }
+    fac[0] = 1, inv[0] = 1;
+    fac[1] = inv[1] = 1;
+    for (int i=2; i<maxn; i++){
+        fac[i] = (fac[i-1] * i)%MOD;
+        inv[i] = modpow(fac[i], MOD - 2);
+    }
+    int ans = 0;
+    for(int i=2; i<=x; i+=2) {
+        ans = (ans + C(i-1, i/2-1)) % MOD;
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -93,7 +121,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();

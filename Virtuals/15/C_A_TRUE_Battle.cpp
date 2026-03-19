@@ -71,19 +71,22 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
+    string s; cin >> s;
+    int one = 0, zero = 0;
+    if(s[0]=='1' || s[n-1]=='1') {
+        cout << "YES" << endl;
         return;
+    } 
+
+    for(int i=0; i<n-1; ++i) {
+        if(s[i]=='1' && s[i+1]=='1') {
+            cout << "YES" << endl;
+            return;
+        }
     }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+
+    cout << "NO"; nl;
+    return;
 }
 
 int32_t main()

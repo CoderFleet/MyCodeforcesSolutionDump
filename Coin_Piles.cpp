@@ -71,19 +71,22 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int a, b; cin >> a >> b;
-    if(a < b) swap(a, b);
-    int tms = a / 2;
-    b -= tms;
-    if(b<0 || (!b && a)) {
-        cout << "NO";
-        nl;
-        return;
-    }
+    if(a<b) swap(a, b);
     if(!a && !b) {
-        cout << "YES\n";
+        cout << "YES" << endl;
+        return;
+    } else if(a==2 && b==1) {
+        cout << "YES" << endl;
         return;
     }
-    
+    int gp = a-b;
+    a -= 2*gp;
+    b -= gp;
+    if(a>=0 && b>=0 && a == b && a%3 == 0) {
+        cout << "YES" << endl;
+    } else {
+        cout << "NO" << endl;
+    }
 }
 
 int32_t main()

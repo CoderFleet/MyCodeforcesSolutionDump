@@ -71,19 +71,33 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 
 void solve(){
     int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
-        return;
-    }
+    vi c(n); cin >> c;
     
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    unordered_map<int, int> mpp;
+    for(int i=0; i<n; ++i) {
+        mpp[c[i]]++;
+    }
+    int ans = 0;
+    int cnt = 0;
+    for(auto& it: mpp) {
+        if(it.second == 1) {
+            ++cnt; 
+            it.second == 0;
+        }
+    }
+
+    int rem = mpp.size() - cnt;
+    if(cnt&1) {
+        ans += 2 * (cnt/2 + 1);
+        // bob turn
+    } else {
+        ans += 2 * (cnt/2);
+        // aiice turn
+    }
+
+    ans += rem;
+
+    cout << ans << endl;
 }
 
 int32_t main()

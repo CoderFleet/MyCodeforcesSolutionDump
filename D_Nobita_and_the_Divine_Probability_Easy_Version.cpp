@@ -69,21 +69,35 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
 
+int modpow(int a, int b){
+    a %= MOD;
+    int res = 1;
+    while (b > 0) {
+        if (b & 1) res = res * a % MOD;
+        a=a*a%MOD;
+        b>>=1;
+    }
+    return res;
+}
+
 void solve(){
-    int n; cin >> n;
-    vector<pair<int, int>> a;
-    fr(i, n) {
-        int x; cin >> x;
-        a[i] = {x, i};
-    }
-    // vi a(n) ; cin >> a;
-    srt(a);
-    if(a[n-1].first == 0) {
-        cout << -1 << endl;
-        return;
-    }
-    
-    cout << a[0].second << " "<< a[n-1].second << " " << a[n-2].second << endl; 
+    int a, b, m; cin >> a >> b >> m;
+
+    int x = log2(a), y = log2(b), z = log2(m);
+
+    int tot = 1;
+    int comm  = ( modpow(3, min(x, min(y, max(0LL, z-1))))) % MOD;
+    int free = modpow(2, x + y - 2 * min(x, min(y, max(0LL, z-1)))) % MOD;
+
+    tot = (comm * free) % MOD;
+
+    int den = modpow(2, x+y);
+
+    int invden = modpow(den, MOD-2);
+
+    int ans = (tot * invden) % MOD;
+
+    cout << ans << endl;
 }
 
 int32_t main()
