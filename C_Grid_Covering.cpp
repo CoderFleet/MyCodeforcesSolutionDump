@@ -68,56 +68,23 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
-    int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
-    }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
-        } else {
-            break;
-        }
-    }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
-        }
-    }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
+    int n, m, a, b;
+    cin >> n >> m >> a >> b;
+    
+    // dbg(__gcd(n, a))
+    int rowD = __gcd(n, a);
+    int colD = __gcd(m, b);
+    
+    // dbg(__gcd(m, a))
+    if(rowD==1 && colD==1) {
+        // cout << __gcd(m, n) 
+        if(__gcd(m, n) == 1 || (__gcd(m,n) == 2)) {
+            cout << "YES" << endl;
+        } else cout << "NO" << endl;
+    } else cout << "NO" << endl;
+
 }
 
 int32_t main()

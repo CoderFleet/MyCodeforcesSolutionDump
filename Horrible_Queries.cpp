@@ -68,56 +68,75 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
     int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
-    }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
+    int l = sqrt(n);
+    if(l == 0) l = 1;
+    int cnt = (n + l - 1) / l;
+    vi blockAdd(cnt, 0);
+    vi indAdd(n, 0);
+    vi blockSum(cnt, 0);
+    int q; cin >> q;
+    while(q--) {
+        int tp; cin >> tp;
+        if(tp == 0) {
+            int p, q, v; cin >> p >> q >> v;
+            --p; --q;
+            int i = p/l;
+            int j = q/l;
+            if(i == j) {
+                for(int k=p; k<=q; ++k) {
+                    indAdd[k] += v;
+                    blockSum[i] += v;
+                }
+            } else {
+                for(int k=p; k<(i+1)*l; ++k) {
+                    indAdd[k] += v;
+                    blockSum[i] += v;
+                }
+                // mid 
+                for(int k=i+1; k<=j-1; ++k) {
+                    blockAdd[k] += v;
+                }
+                //rgt
+                for(int k=j*l; k<=q; ++k) {
+                    indAdd[k] += v;
+                    blockSum[j] += v;
+                }
+            }
         } else {
-            break;
+            int p, q; cin >> p >> q;
+            --p; --q;
+            int i = p/l;
+            int j = q/l;
+            if(i == j) {
+                int ans = 0;
+                for(int k=p; k<=q; ++k) {
+                    ans += indAdd[k];
+                    ans += blockAdd[i];
+                }
+                cout << ans << endl;
+            } else {
+                int ans = 0;
+                for(int k=p; k<(i+1)*l; ++k) {
+                    ans += indAdd[k];
+                    ans += blockAdd[i];
+                }
+                // mid 
+                for(int k=i+1; k<=j-1; ++k) {
+                    ans += l * blockAdd[k] + blockSum[k];
+                }
+                //rgt
+                for(int k=j*l; k<=q; ++k) {
+                    ans += indAdd[k];
+                    ans += blockAdd[j];
+                }
+
+                cout << ans << endl;
+            }
         }
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
-        }
-    }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
 }
 
 int32_t main()

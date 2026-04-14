@@ -68,56 +68,49 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
     int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
+    vi a(n), b(n), c(n); 
+    for(int i=0; i<n; ++i) {
+        cin >> a[i] >> b[i] >> c[i];
     }
-    s = "1";
+    vector<vector<vector<int>>> dp(n, vector<vector<int>>(3, vector<int>(3)));
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<3; j++) {
+            dp[i][j][2] = LLONG_MAX;
+        }
+    }
+    dp[0][0] = {a[0], a[0], 0};
+    dp[0][1] = {b[0], b[0], 0};
+    dp[0][2] = {c[0], c[0], 0};
+    
     for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
-        } else {
-            break;
+        // a
+        for(int j=0; j<3; ++j) {
+            int mx = max(a[i], dp[i-1][j][0]);
+            int mi = min(a[i], dp[i-1][j][1]);
+            int nxt = max(mx-mi, dp[i-1][j][2]);
+            if(nxt <= dp[i][0][2]) dp[i][0] = {mx, mi, nxt};
+        }
+        
+        // b
+        for(int j=0; j<3; ++j) {
+            int mx = max(b[i], dp[i-1][j][0]);
+            int mi = min(b[i], dp[i-1][j][1]);
+            int nxt = max(mx-mi, dp[i-1][j][2]);
+            if(nxt <= dp[i][1][2]) dp[i][1] = {mx, mi, nxt};
+        }
+        
+        // c
+        for(int j=0; j<3; ++j) {
+            int mx = max(c[i], dp[i-1][j][0]);
+            int mi = min(c[i], dp[i-1][j][1]);
+            int nxt = max(mx-mi, dp[i-1][j][2]);
+            if(nxt <= dp[i][2][2]) dp[i][2] = {mx, mi, nxt};
         }
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
-        }
-    }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
+    cout << min(dp[n-1][0][2], min(dp[n-1][1][2], dp[n-1][2][2])) << endl;
 }
 
 int32_t main()

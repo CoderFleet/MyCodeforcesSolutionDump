@@ -68,56 +68,27 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
-    int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
+    int n, k; cin >> n >> k;
+
+    vi a(n); cin >> a;
+    srt(a);
+    int mex = 0;
+    unordered_map<int, int> mpp;
+    for(int i=0; i<n; ++i) {
+        mpp[a[i]]++;
+        if(a[i] == mex) ++mex;
     }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
-        } else {
-            break;
-        }
+    dbg(mex);
+    if(mex < k) {
+        int mn = min(k-mex, mpp[k]);
+        cout << (k-mex) + mpp[k]-mn << endl;
+    } else if(mex > k) {
+        cout << mpp[k] << endl;
+    } else {
+        cout << 0 << endl;
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
-        }
-    }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
 }
 
 int32_t main()

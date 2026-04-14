@@ -68,56 +68,86 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
     int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
+    vi a(n), b(n); cin >>a >> b;
+    auto lcm = [&](int a, int b) {
+        return (a*b) / (__gcd(a, b));
+    };
+
+    if(n==1) {
+        cout << 1 << endl;
     }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
-        } else {
-            break;
+    vector<vector<int>> dp(n);
+    vector<vector<int>> mul(n);
+    vi gcdi(n-1);
+    for(int i=0; i<n-1; ++i) gcdi[i] = __gcd(a[i], a[i+1]);
+    vi lcmi(n, gcdi[0]);
+    for(int i=1; i<n-1; ++i) {
+        lcmi[i] = lcm(gcdi[i-1], gcdi[i]);
+    }
+    lcmi[n-1] = gcdi[n-2];
+    // dp[0].pb(a[0] / (lcm(__gcd(a[0], a[1]), __gcd(a[1], a[]))))
+    // mul[0].pb(a[0] / lcmi[0]);
+    // for(int i=1; i<=b[0]/lcmi[0]; ++i) {
+    //     if(k!=a[0]/lcmi[0]) {
+    //         dp[0].pb(i);
+    //         if(dp[0].size() == 10) break;
+    //     }
+    // }
+
+    for(int i=0; i<n; ++i) {
+        mul[i].pb(a[i] / lcmi[i]);
+
+        for(int j=1; j<=(b[i]/lcmi[i]); ++j) {
+            int flg = 1;
+            if(i>0) {
+                int mulp = lcmi[i-1] / gcdi[i-1];
+                if(__gcd(mulp, j) != 1) flg = 0;
+            }
+            // flg && i>    
+            if(flg && i<n-1) {
+                int muln = lcmi[i+1] / gcdi[i];
+                if(__gcd(muln, j) != 1) flg = 0;
+            }
+
+            if(flg) {
+                if(j == a[i] / lcmi[i]) continue;
+                mul[i].pb(j);
+                if(mul[i].size() > 10) break;
+            } 
         }
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
+
+    for(int i=0; i<n; ++i) {
+        dp[i].resize(mul[i].size(), -1);
+    } 
+    for(int i=0; i<dp[0].size(); ++i) dp[0][1] = 1;
+    dp[0][0] = 0;
+
+    for(int i=1; i<n; ++i ){
+        for(int j=0; j<mul[i].size(); ++j) {
+            int currml = mul[i][j];
+            int bst = -1;
+            for(int k=0; k<mul[i-1].size(); ++k) {
+                if(dp[i-1][k] != -1) {
+                    int prevml = mul[i-1][k];
+                    if(__gcd(currml, prevml) == 1) bst = max(bst, dp[i-1][k]);  
+                }
+            }
+
+            if(bst != -1) {
+                dp[i][j] = bst + (currml != (a[i] / lcmi[i]));
+            }
         }
     }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
+
+    int ans = 0;
+    for(int i=0; i<dp[n-1].size(); ++i) {
+        ans = max(ans, dp[n-1][i]);
+    }
+    cout << ans << endl;
 }
 
 int32_t main()

@@ -68,56 +68,118 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
+// void solve(){
+//     int n, k; cin >> n >> k;
+//     vi a(n); cin >> a;
+//     vi p(k); cin >> p;
+//     p[0]--;
+//     int og = a[p[0]];
+//     int tot = 0;
+//     int tms1 = 0;
+//     int tms2 = 0;
+//     int i = 0, j = n-1;
+//     while(i<p[0] && j>p[0]) { 
+//         //lft
+//         int sft1=0, sft2= 0;
+//         if(a[i] != og && !(tms1&1)) sft1=1;
+//         else if(a[i]==og && (tms1&1)) sft1=1;
+//         //rgt
+//         if(a[j] != og && !(tms2&1)) sft2=1;
+//         else if(a[j]==og && (tms2&1)) sft2=1;
+//         tot += 1;
+//         if(sft1&&sft2) {
+//             ++tms1;
+//             ++tms2;
+//             ++i;
+//             --j;
+//         } else if(sft1) {
+//             ++tms1;
+//             ++i;
+//             --j;
+//         } else if(sft2) {
+//             ++tms2;
+//             ++i;
+//             --j;
+//         } else {
+//             tot -= 1;
+//             ++i;
+//             --j;
+//         }
+//     }
+//     dbg(tot);
+//     dbg(i);
+//     dbg(j);
+//     if(tot&1) a[p[0]] ^= 1;
+//     if(i<p[0]) {
+//         // cout << "YI1" << endl;
+//         int l = i;
+//         for(int q=l; q<p[0]; ++q) {
+//             if(tms1&1) {
+//                 if(a[q] == og) {
+//                     ++tms1;
+//                     ++tot;
+//                 }
+//             } else {
+//                 if(a[q] != og) {
+//                     ++tms1;
+//                     ++tot;
+//                 }
+//             }
+//         }
+//     }
+//     if(j>p[0]) {
+//         // cout << "yooy" << endl;
+//         int r = j;
+        
+//         for(int q=r; q>=p[0]; --q) {
+//             if(tms2&1) {
+//                 if(a[q] == og) {
+//                     ++tot;
+//                     ++tms2;
+//                 }
+//             } else {
+//                 if(a[q] != og) {
+//                     ++tot;
+//                     ++tms2;
+//                 }
+//             }
+//         }
+//     }
+//     if(a[p[0]] != og) ++tot;
+
+//     cout << tot << endl;
+// }
+
 void solve(){
-    int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
-        }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
-    }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
-        } else {
-            break;
+    int n, k; cin >> n >> k;
+    vi a(n); cin >> a;
+    vi p(k); cin >> p;
+    p[0]--;
+
+    int og = a[p[0]];
+
+    int lft = 0;
+    int tms1 = 0;
+    for(int i=0; i<p[0];++i){
+        if( (a[i]^tms1) !=og){
+            lft++;
+            tms1 ^= 1;
         }
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
+    int rgt = 0;
+    int tms2 = 0;
+    for(int i=n-1; i>p[0]; --i){
+        if((a[i]^tms2) != og ){
+            rgt++;
+            tms2 ^= 1;
         }
     }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
+
+    int tot = max(lft, rgt);
+    if(tot&1) tot++;
+
+    cout << tot << endl;
 }
 
 int32_t main()

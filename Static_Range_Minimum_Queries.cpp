@@ -68,56 +68,47 @@ template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order
 // JaldiBaazi ke chkkr me ghode nahi lgwane hain...
 // Question ko dhyan se aur clearly pdhle bhai...
 // Always count on sieve....
-int ask(string s) {
-    cout << "? " << s << endl;
-    int out;
-    cin >> out;
-    if(out == -1) exit(0);
-    return out;
-}
-void submit(string s) {
-    cout << "! " << s << endl;
-    return;
-}
+
 void solve(){
     int n; cin >> n;
-    // 2*n queries limit hai
-    string s = "10";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '1';
+    int q; cin >> q;
+    vi x(n); cin >> x;
+    int l = sqrt(n);
+    int cnt = (n + l - 1) / l;
+    vector<int> blocks(cnt);
+    int inf = 1e12;
+    for(int i=0; i<cnt; ++i) {
+        int j = (i * l);
+        int mi = inf;
+        int c = j;
+        while(j < n && j < c+l) {
+            mi = min(mi, x[j]);
+            ++j;
         }
-        submit(ans);
-    } else 
-    s = "01";
-    if(!ask(s)) {
-        string ans = "";
-        for(int i=0; i<n; ++i) {
-            ans += '0';
-        }
-        submit(ans);
+        blocks[i] = mi;
     }
-    s = "1";
-    for(int i=1; i<n; ++i) {
-        if(ask(s+'1')) {
-            s += '1';
-        } else if(ask(s+'0')) {
-            s += '0';
+    while(q--) {
+        int st, end; cin >> st >> end;
+        --st; --end;
+        int ans = inf;
+        int i = st / l;
+        int j = end / l;
+        if(i==j) {
+            for(int k=st; k<=end; ++k) ans = min(ans, x[k]);
+            cout << ans << endl;
+            continue;
         } else {
-            break;
+            //lft
+            for(int k=st; k<(i+1)*l; ++k) ans = min(ans, x[k]);
+            // mid 
+            for(int k=i+1; k<=j-1; ++k) ans = min(ans, blocks[k]);
+            //rgt
+            for(int k=j*l; k<=end; ++k) ans = min(ans, x[k]);
+            cout << ans << endl;
         }
     }
-    for(int i=s.length(); i<n; ++i) {
-        if(ask('1' + s)) {
-            s = '1' + s;
-        } else if(ask('0' + s)) {
-            s = '0' + s;
-        }
-    }
-    submit(s);
-    int res; cin >> res;
-    if(res == -1) exit(0);
+
+    return ;
 }
 
 int32_t main()
@@ -127,7 +118,7 @@ int32_t main()
  cin.tie(NULL);
 
     int T = 1;
-    cin >> T;
+    // cin >> T;
     while (T--)
     {
         solve();
